@@ -81,6 +81,7 @@ function Home() {
           <button onClick={addTask}>Add</button>
         </div>
 
+        {/* ✅ Search input below add-task-form */}
         <input
           className="search-bar"
           type="text"

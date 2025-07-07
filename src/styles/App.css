@@ -397,6 +397,6 @@ body, .App {
 }
 
 .search-bar:focus {
-  outline: none;
+  outline: solid;
   border-color: #b39ddb;
 }
