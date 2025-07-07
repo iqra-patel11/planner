@@ -1,36 +1,47 @@
 import React, { useState, useEffect } from "react";
 import "./styles/App.css";
 import Login from "./components/Login";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 
-function Home() {
+function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem("loggedIn") === "true";
+  });
+
+  const [taskInput, setTaskInput] = useState("");
+  const [priority, setPriority] = useState("medium");
+  const [dueDate, setDueDate] = useState("");
   const [tasks, setTasks] = useState(() => {
     const saved = localStorage.getItem("tasks");
     return saved ? JSON.parse(saved) : [];
   });
 
-  const [taskInput, setTaskInput] = useState("");
   const [filter, setFilter] = useState("all");
-  const [priority, setPriority] = useState("medium");
-  const [dueDate, setDueDate] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [editTaskId, setEditTaskId] = useState(null);
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("darkMode") === "true";
+  });
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
-  const addOrUpdateTask = () => {
-    if (taskInput.trim() === "") return;
+  useEffect(() => {
+    localStorage.setItem("darkMode", darkMode);
+  }, [darkMode]);
 
-    if (editTaskId !== null) {
-      setTasks(tasks.map(task =>
-        task.id === editTaskId
-          ? { ...task, text: taskInput, priority, dueDate }
-          : task
-      ));
-      setEditTaskId(null);
-    } else {
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+    localStorage.setItem("loggedIn", "true");
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem("loggedIn");
+    localStorage.removeItem("tasks");
+  };
+
+  const handleAddTask = (e) => {
+    e.preventDefault();
+    if (taskInput.trim()) {
       const newTask = {
         id: Date.now(),
         text: taskInput,
@@ -38,134 +49,135 @@ function Home() {
         priority,
         dueDate,
       };
-      setTasks([...tasks, newTask]);
+      setTasks([newTask, ...tasks]);
+      setTaskInput("");
+      setPriority("medium");
+      setDueDate("");
     }
-
-    setTaskInput("");
-    setPriority("medium");
-    setDueDate("");
   };
 
   const toggleTask = (id) => {
-    setTasks(tasks.map(task =>
+    const updated = tasks.map((task) =>
       task.id === id ? { ...task, completed: !task.completed } : task
-    ));
+    );
+    setTasks(updated);
   };
 
-  const confirmDelete = (id) => {
-    const taskToDelete = tasks.find(task => task.id === id);
-    if (
-      window.confirm(`Are you sure you want to delete "${taskToDelete.text}"?`)
-    ) {
-      setTasks(tasks.filter(task => task.id !== id));
-    }
+  const deleteTask = (id) => {
+    setTasks(tasks.filter((task) => task.id !== id));
   };
 
-  const startEdit = (task) => {
-    setEditTaskId(task.id);
-    setTaskInput(task.text);
-    setPriority(task.priority);
-    setDueDate(task.dueDate || "");
-  };
+  const filteredTasks = tasks.filter((task) => {
+    if (filter === "completed") return task.completed;
+    if (filter === "incomplete") return !task.completed;
+    return true;
+  });
 
-  const filteredTasks = tasks
-    .filter(task => {
-      if (filter === "completed") return task.completed;
-      if (filter === "incomplete") return !task.completed;
-      return true;
-    })
-    .filter(task => task.text.toLowerCase().includes(searchQuery.toLowerCase()));
+  const isExpired = (due) => {
+    if (!due) return false;
+    const today = new Date().toISOString().split("T")[0];
+    return due < today;
+  };
 
   return (
-    <div className="App">
-      <div className="box">
-        <div className="header">
-          <h2>My Planner</h2>
-        </div>
+    <div className={`App ${darkMode ? "dark" : ""}`}>
+      {!isLoggedIn ? (
+        <Login onLogin={handleLogin} />
+      ) : (
+        <div className="container">
+          <div className="box">
+            <div className="header">
+              <h2>My Pastel Task Tracker</h2>
+              <div className="right-header">
+                <label className="switch">
+                  <input
+                    type="checkbox"
+                    checked={darkMode}
+                    onChange={() => setDarkMode(!darkMode)}
+                  />
+                  <span className="slider"></span>
+                </label>
+                <button onClick={handleLogout} className="logout-btn">
+                  Logout
+                </button>
+              </div>
+            </div>
 
-        <div className="add-task-form">
-          <input
-            type="text"
-            placeholder="Add or edit a task"
-            value={taskInput}
-            onChange={(e) => setTaskInput(e.target.value)}
-          />
-          <select value={priority} onChange={(e) => setPriority(e.target.value)}>
-            <option value="high">High 🔴</option>
-            <option value="medium">Medium 🟡</option>
-            <option value="low">Low 🟢</option>
-          </select>
-          <input
-            type="date"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-          />
-          <button onClick={addOrUpdateTask}>
-            {editTaskId !== null ? "Update" : "Add"}
-          </button>
-        </div>
-
-        <input
-          className="search-bar"
-          type="text"
-          placeholder="Search tasks..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-
-        <div className="filter-buttons">
-          <button onClick={() => setFilter("all")}>All</button>
-          <button onClick={() => setFilter("completed")}>Completed</button>
-          <button onClick={() => setFilter("incomplete")}>Incomplete</button>
-        </div>
-
-        {filteredTasks.length === 0 ? (
-          <p className="empty">No tasks match your search.</p>
-        ) : (
-          <ul className="task-list">
-            {filteredTasks.map((task) => (
-              <li
-                key={task.id}
-                className={`task ${task.completed ? "completed" : ""}`}
+            <form onSubmit={handleAddTask} className="add-task-form">
+              <input
+                type="text"
+                value={taskInput}
+                onChange={(e) => setTaskInput(e.target.value)}
+                placeholder="Add a new task..."
+              />
+              <select
+                value={priority}
+                onChange={(e) => setPriority(e.target.value)}
+                className="priority-select"
               >
-                <input
-                  type="checkbox"
-                  checked={task.completed}
-                  onChange={() => toggleTask(task.id)}
-                  className="task-checkbox"
-                />
-                <div className="task-details">
-                  <strong>{task.text}</strong>
-                  {task.dueDate && (
-                    <div className="due">Due: {task.dueDate}</div>
-                  )}
-                </div>
-                <span className={`priority ${task.priority}`}>
-                  {task.priority}
-                </span>
-                <div className="task-buttons">
-                  <button onClick={() => startEdit(task)}>✏️</button>
-                  <button onClick={() => confirmDelete(task.id)}>❌</button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
+                <option value="high">High 🔥</option>
+                <option value="medium">Medium 💫</option>
+                <option value="low">Low 🌱</option>
+              </select>
+              <input
+                type="date"
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+                className="due-date-input"
+              />
+              <button type="submit">Add</button>
+            </form>
+
+            <div className="filter-buttons">
+              <button
+                className={filter === "all" ? "active" : ""}
+                onClick={() => setFilter("all")}
+              >
+                All
+              </button>
+              <button
+                className={filter === "completed" ? "active" : ""}
+                onClick={() => setFilter("completed")}
+              >
+                Completed
+              </button>
+              <button
+                className={filter === "incomplete" ? "active" : ""}
+                onClick={() => setFilter("incomplete")}
+              >
+                Incomplete
+              </button>
+            </div>
+
+            <div className="task-list">
+              {filteredTasks.length === 0 ? (
+                <p className="empty">No tasks to show for this filter.</p>
+              ) : (
+                filteredTasks.map((task) => (
+                  <div
+                    key={task.id}
+                    className={`task ${task.completed ? "completed" : ""} ${
+                      isExpired(task.dueDate) && !task.completed ? "expired" : ""
+                    }`}
+                  >
+                    <span onClick={() => toggleTask(task.id)}>
+                      {task.text}
+                    </span>
+                    {task.dueDate && (
+                      <span className="due-date">Due: {task.dueDate}</span>
+                    )}
+                    <span className={`priority-badge ${task.priority}`}>
+                      {task.priority}
+                    </span>
+                    <button onClick={() => deleteTask(task.id)}>🗑️</button>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
-  );
-}
-
-function App() {
-  const isLoggedIn = localStorage.getItem("loggedIn");
-
-  return (
-    <Router>
-      <Routes>
-        <Route path="/" element={isLoggedIn ? <Home /> : <Navigate to="/login" />} />
-        <Route path="/login" element={<Login />} />
-      </Routes>
-    </Router>
   );
 }
 
