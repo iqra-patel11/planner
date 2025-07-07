@@ -1,74 +1,79 @@
-<<<<<<< HEAD
-# Getting Started with Create React App
+# 📝 Personal Task Tracker
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 📖 Description
 
-## Available Scripts
+The **Personal Task Tracker** is a beautifully designed pastel-themed React web app that helps users manage tasks in a minimal yet powerful way. From simple login to task completion and filtering, this tracker offers core productivity features with bonus enhancements like due dates, priority levels, and dark mode — all with localStorage persistence and responsive design.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🚀 Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- 🔐 **Simple Login**  
+  - No authentication needed; stores login state in localStorage  
+  - Automatically redirects to dashboard
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- ✅ **Add, Complete & Delete Tasks**  
+  - Add tasks with title (required)  
+  - Toggle completion status  
+  - Delete tasks with one click
 
-### `npm test`
+- ⚠️ **Due Dates & Expiry Highlighting**  
+  - Optional due date input  
+  - Expired tasks are visually marked
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- 🔥 **Task Priority Levels**  
+  - High 🔥, Medium 💫, Low 🌱 — shown with color badges
 
-### `npm run build`
+- 🌙 **Dark Mode Toggle**  
+  - Beautiful toggle switch for light/dark themes  
+  - Theme saved across sessions
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- 📋 **Task Filters**  
+  - Filter by All, Completed, or Incomplete  
+  - Real-time filter switching
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- 💾 **Persistent Storage**  
+  - All tasks and settings stored using localStorage  
+  - Survive refreshes or browser restarts
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- 📱 **Responsive Design**  
+  - Works seamlessly on mobile, tablet, and desktop
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## 🧰 Technologies Used
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- **React.js** (with Hooks)
+- **CSS** (Custom pastel theme)
+- **LocalStorage API**
+- **GitHub Pages** (for deployment)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 🛠 Setup Instructions
 
-## Learn More
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/iqra-patel11/planner
+   cd planner
+   npm install
+   npm start
+   Open in browser
+http://localhost:3000
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+🔗 Live Demo
+🌐 Live Deployed App:
+https://iqra-patel11.github.io/
 
-### Code Splitting
+🖼 Screenshots
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+![image](https://github.com/user-attachments/assets/d705bb39-0b81-40b1-a18b-d23a12ffb4a0)
+![image](https://github.com/user-attachments/assets/38c991d8-71f5-4fdf-b520-2369b1316f66)
+![image](https://github.com/user-attachments/assets/3e8a8317-88a3-4e25-a0b0-511c8ca6f21b)
+![image](https://github.com/user-attachments/assets/5dfd32b2-8b88-4a2e-9eda-1575797ebc2f)
 
-### Analyzing the Bundle Size
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-### Making a Progressive Web App
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-=======
-# planner
->>>>>>> a2c043dcc52959264aa5ff008fd4814b9d5ec1de
