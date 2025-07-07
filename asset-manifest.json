@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/planner/static/css/main.56e7d214.css",
+    "main.js": "/planner/static/js/main.a3577996.js",
+    "index.html": "/planner/index.html",
+    "main.56e7d214.css.map": "/planner/static/css/main.56e7d214.css.map",
+    "main.a3577996.js.map": "/planner/static/js/main.a3577996.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.56e7d214.css",
+    "static/js/main.a3577996.js"
+  ]
+}
