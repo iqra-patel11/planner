@@ -160,16 +160,20 @@ function App() {
                       isExpired(task.dueDate) && !task.completed ? "expired" : ""
                     }`}
                   >
-                    <span onClick={() => toggleTask(task.id)}>
-                      {task.text}
-                    </span>
+                    <span onClick={() => toggleTask(task.id)}>{task.text}</span>
                     {task.dueDate && (
                       <span className="due-date">Due: {task.dueDate}</span>
                     )}
                     <span className={`priority-badge ${task.priority}`}>
                       {task.priority}
                     </span>
-                    <button onClick={() => deleteTask(task.id)}>🗑️</button>
+                    <button
+                      type="button"
+                      onClick={() => deleteTask(task.id)}
+                      className="delete-btn"
+                    >
+                      🗑️
+                    </button>
                   </div>
                 ))
               )}
