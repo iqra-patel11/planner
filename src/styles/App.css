@@ -347,3 +347,41 @@ body, .App {
   text-align: center;
   padding: 10px;
 }
+
+/* --- Animations --- */
+@keyframes fadeInSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    height: auto;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    height: 0;
+    transform: scale(0.95);
+  }
+}
+
+/* Apply entrance animation */
+.task {
+  animation: fadeInSlideUp 0.4s ease forwards;
+  transition: all 0.3s ease;
+}
+
+/* Optional: smooth toggle effects */
+.task.completed {
+  opacity: 0.6;
+  text-decoration: line-through;
+  transform: scale(0.98);
+}
