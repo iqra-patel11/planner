@@ -16,10 +16,17 @@ function App() {
   });
 
   const [filter, setFilter] = useState("all");
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("darkMode") === "true";
+  });
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
+
+  useEffect(() => {
+    localStorage.setItem("darkMode", darkMode);
+  }, [darkMode]);
 
   const handleLogin = () => {
     setIsLoggedIn(true);
@@ -73,7 +80,7 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className={`App ${darkMode ? "dark" : ""}`}>
       {!isLoggedIn ? (
         <Login onLogin={handleLogin} />
       ) : (
@@ -81,9 +88,19 @@ function App() {
           <div className="box">
             <div className="header">
               <h2>My Pastel Task Tracker</h2>
-              <button onClick={handleLogout} className="logout-btn">
-                Logout
-              </button>
+              <div className="right-header">
+                <label className="switch">
+                  <input
+                    type="checkbox"
+                    checked={darkMode}
+                    onChange={() => setDarkMode(!darkMode)}
+                  />
+                  <span className="slider"></span>
+                </label>
+                <button onClick={handleLogout} className="logout-btn">
+                  Logout
+                </button>
+              </div>
             </div>
 
             <form onSubmit={handleAddTask} className="add-task-form">
@@ -147,9 +164,7 @@ function App() {
                       {task.text}
                     </span>
                     {task.dueDate && (
-                      <span className="due-date">
-                        Due: {task.dueDate}
-                      </span>
+                      <span className="due-date">Due: {task.dueDate}</span>
                     )}
                     <span className={`priority-badge ${task.priority}`}>
                       {task.priority}
