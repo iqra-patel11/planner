@@ -1,40 +1,49 @@
-import React, { useEffect, useState } from 'react';
-import Login from './components/Login';
-import TaskForm from './components/TaskForm';
-import TaskList from './components/TaskList';
+import React, { useState, useEffect } from "react";
+import "./styles/App.css";
+import Login from "./components/Login";
 
-const App = () => {
-  const [username, setUsername] = useState('');
+function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem("loggedIn") === "true";
+  });
+
+  const [taskInput, setTaskInput] = useState("");
   const [tasks, setTasks] = useState(() => {
-    const saved = localStorage.getItem('tasks');
+    const saved = localStorage.getItem("tasks");
     return saved ? JSON.parse(saved) : [];
   });
 
-  useEffect(() => {
-    const storedUsername = localStorage.getItem('username');
-    if (storedUsername) setUsername(storedUsername);
-  }, []);
+  const [filter, setFilter] = useState("all");
 
   useEffect(() => {
-    localStorage.setItem('tasks', JSON.stringify(tasks));
+    localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
-  const handleLogin = (name) => {
-    setUsername(name);
-    localStorage.setItem('username', name);
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+    localStorage.setItem("loggedIn", "true");
   };
 
-  const addTask = (task) => {
-    const newTask = {
-      id: Date.now(),
-      title: task,
-      completed: false,
-      createdAt: new Date().toISOString()
-    };
-    setTasks([newTask, ...tasks]);
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    localStorage.removeItem("loggedIn");
+    localStorage.removeItem("tasks");
   };
 
-  const toggleComplete = (id) => {
+  const handleAddTask = (e) => {
+    e.preventDefault();
+    if (taskInput.trim()) {
+      const newTask = {
+        id: Date.now(),
+        text: taskInput,
+        completed: false,
+      };
+      setTasks([newTask, ...tasks]);
+      setTaskInput("");
+    }
+  };
+
+  const toggleTask = (id) => {
     const updated = tasks.map((task) =>
       task.id === id ? { ...task, completed: !task.completed } : task
     );
@@ -45,19 +54,79 @@ const App = () => {
     setTasks(tasks.filter((task) => task.id !== id));
   };
 
+  const filteredTasks = tasks.filter((task) => {
+    if (filter === "completed") return task.completed;
+    if (filter === "incomplete") return !task.completed;
+    return true;
+  });
+
   return (
-    <div className="app">
-      {!username ? (
+    <div className="App">
+      {!isLoggedIn ? (
         <Login onLogin={handleLogin} />
       ) : (
-        <>
-          <h1>Hello, {username}!</h1>
-          <TaskForm onAdd={addTask} />
-          <TaskList tasks={tasks} onToggle={toggleComplete} onDelete={deleteTask} />
-        </>
+        <div className="container">
+          <div className="box">
+            <div className="header">
+              <h2>My Pastel Task Tracker</h2>
+              <button onClick={handleLogout} className="logout-btn">
+                Logout
+              </button>
+            </div>
+
+            <form onSubmit={handleAddTask} className="add-task-form">
+              <input
+                type="text"
+                value={taskInput}
+                onChange={(e) => setTaskInput(e.target.value)}
+                placeholder="Add a new task..."
+              />
+              <button type="submit">Add</button>
+            </form>
+
+            <div className="filter-buttons">
+              <button
+                className={filter === "all" ? "active" : ""}
+                onClick={() => setFilter("all")}
+              >
+                All
+              </button>
+              <button
+                className={filter === "completed" ? "active" : ""}
+                onClick={() => setFilter("completed")}
+              >
+                Completed
+              </button>
+              <button
+                className={filter === "incomplete" ? "active" : ""}
+                onClick={() => setFilter("incomplete")}
+              >
+                Incomplete
+              </button>
+            </div>
+
+            <div className="task-list">
+              {filteredTasks.length === 0 ? (
+                <p className="empty">No tasks to show for this filter.</p>
+              ) : (
+                filteredTasks.map((task) => (
+                  <div
+                    key={task.id}
+                    className={`task ${task.completed ? "completed" : ""}`}
+                  >
+                    <span onClick={() => toggleTask(task.id)}>
+                      {task.text}
+                    </span>
+                    <button onClick={() => deleteTask(task.id)}>🗑️</button>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
-};
+}
 
 export default App;

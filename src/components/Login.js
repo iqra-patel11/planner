@@ -1,36 +1,34 @@
-// src/components/Login.js
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import '../styles/App.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const Login = () => {
-  const [username, setUsername] = useState('');
+function Login({ onLogin }) {
+  const [username, setUsername] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     if (username.trim()) {
-      localStorage.setItem('username', username);
-      navigate('/tasks');
+      onLogin(); // set login state
+      navigate("/"); // optionally navigate (already on root)
     }
   };
 
   return (
-    <div className="login-container">
-      <h2>🔐 Welcome!</h2>
-      <form onSubmit={handleLogin} className="login-form">
-        <input
-          type="text"
-          placeholder="Enter your name ✨"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          className="login-input"
-          required
-        />
-        <button type="submit" className="login-button">Login ➡️</button>
-      </form>
+    <div className="container">
+      <div className="box">
+        <h2>Welcome 💖</h2>
+        <form onSubmit={handleSubmit} className="add-task-form">
+          <input
+            type="text"
+            placeholder="Enter your name"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <button type="submit">Login</button>
+        </form>
+      </div>
     </div>
   );
-};
+}
 
 export default Login;
