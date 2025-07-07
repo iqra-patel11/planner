@@ -9,6 +9,7 @@ function App() {
 
   const [taskInput, setTaskInput] = useState("");
   const [priority, setPriority] = useState("medium");
+  const [dueDate, setDueDate] = useState("");
   const [tasks, setTasks] = useState(() => {
     const saved = localStorage.getItem("tasks");
     return saved ? JSON.parse(saved) : [];
@@ -38,11 +39,13 @@ function App() {
         id: Date.now(),
         text: taskInput,
         completed: false,
-        priority: priority,
+        priority,
+        dueDate,
       };
       setTasks([newTask, ...tasks]);
       setTaskInput("");
       setPriority("medium");
+      setDueDate("");
     }
   };
 
@@ -62,6 +65,12 @@ function App() {
     if (filter === "incomplete") return !task.completed;
     return true;
   });
+
+  const isExpired = (due) => {
+    if (!due) return false;
+    const today = new Date().toISOString().split("T")[0];
+    return due < today;
+  };
 
   return (
     <div className="App">
@@ -93,6 +102,12 @@ function App() {
                 <option value="medium">Medium 💫</option>
                 <option value="low">Low 🌱</option>
               </select>
+              <input
+                type="date"
+                value={dueDate}
+                onChange={(e) => setDueDate(e.target.value)}
+                className="due-date-input"
+              />
               <button type="submit">Add</button>
             </form>
 
@@ -124,11 +139,18 @@ function App() {
                 filteredTasks.map((task) => (
                   <div
                     key={task.id}
-                    className={`task ${task.completed ? "completed" : ""}`}
+                    className={`task ${task.completed ? "completed" : ""} ${
+                      isExpired(task.dueDate) && !task.completed ? "expired" : ""
+                    }`}
                   >
                     <span onClick={() => toggleTask(task.id)}>
                       {task.text}
                     </span>
+                    {task.dueDate && (
+                      <span className="due-date">
+                        Due: {task.dueDate}
+                      </span>
+                    )}
                     <span className={`priority-badge ${task.priority}`}>
                       {task.priority}
                     </span>
