@@ -8,6 +8,7 @@ function App() {
   });
 
   const [taskInput, setTaskInput] = useState("");
+  const [priority, setPriority] = useState("medium");
   const [tasks, setTasks] = useState(() => {
     const saved = localStorage.getItem("tasks");
     return saved ? JSON.parse(saved) : [];
@@ -37,9 +38,11 @@ function App() {
         id: Date.now(),
         text: taskInput,
         completed: false,
+        priority: priority,
       };
       setTasks([newTask, ...tasks]);
       setTaskInput("");
+      setPriority("medium");
     }
   };
 
@@ -81,6 +84,15 @@ function App() {
                 onChange={(e) => setTaskInput(e.target.value)}
                 placeholder="Add a new task..."
               />
+              <select
+                value={priority}
+                onChange={(e) => setPriority(e.target.value)}
+                className="priority-select"
+              >
+                <option value="high">High 🔥</option>
+                <option value="medium">Medium 💫</option>
+                <option value="low">Low 🌱</option>
+              </select>
               <button type="submit">Add</button>
             </form>
 
@@ -116,6 +128,9 @@ function App() {
                   >
                     <span onClick={() => toggleTask(task.id)}>
                       {task.text}
+                    </span>
+                    <span className={`priority-badge ${task.priority}`}>
+                      {task.priority}
                     </span>
                     <button onClick={() => deleteTask(task.id)}>🗑️</button>
                   </div>

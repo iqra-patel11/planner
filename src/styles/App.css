@@ -140,3 +140,35 @@ body {
   background-color: #d8bfd8;
   color: white;
 }
+
+.priority-select {
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #ccc;
+  background-color: #fefefe;
+  font-weight: bold;
+}
+
+.priority-badge {
+  padding: 4px 10px;
+  border-radius: 8px;
+  margin-left: 10px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.priority-badge.high {
+  background-color: #ffccd5;
+  color: #b2001d;
+}
+
+.priority-badge.medium {
+  background-color: #fff1cc;
+  color: #8b6f00;
+}
+
+.priority-badge.low {
+  background-color: #d4fcdc;
+  color: #2b7a0b;
+}
