@@ -14,23 +14,33 @@ function Home() {
   const [priority, setPriority] = useState("medium");
   const [dueDate, setDueDate] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [editTaskId, setEditTaskId] = useState(null);
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
-  const addTask = () => {
+  const addOrUpdateTask = () => {
     if (taskInput.trim() === "") return;
 
-    const newTask = {
-      id: Date.now(),
-      text: taskInput,
-      completed: false,
-      priority,
-      dueDate,
-    };
+    if (editTaskId !== null) {
+      setTasks(tasks.map(task =>
+        task.id === editTaskId
+          ? { ...task, text: taskInput, priority, dueDate }
+          : task
+      ));
+      setEditTaskId(null);
+    } else {
+      const newTask = {
+        id: Date.now(),
+        text: taskInput,
+        completed: false,
+        priority,
+        dueDate,
+      };
+      setTasks([...tasks, newTask]);
+    }
 
-    setTasks([...tasks, newTask]);
     setTaskInput("");
     setPriority("medium");
     setDueDate("");
@@ -42,8 +52,20 @@ function Home() {
     ));
   };
 
-  const deleteTask = (id) => {
-    setTasks(tasks.filter(task => task.id !== id));
+  const confirmDelete = (id) => {
+    const taskToDelete = tasks.find(task => task.id === id);
+    if (
+      window.confirm(`Are you sure you want to delete "${taskToDelete.text}"?`)
+    ) {
+      setTasks(tasks.filter(task => task.id !== id));
+    }
+  };
+
+  const startEdit = (task) => {
+    setEditTaskId(task.id);
+    setTaskInput(task.text);
+    setPriority(task.priority);
+    setDueDate(task.dueDate || "");
   };
 
   const filteredTasks = tasks
@@ -64,7 +86,7 @@ function Home() {
         <div className="add-task-form">
           <input
             type="text"
-            placeholder="Add a new task"
+            placeholder="Add or edit a task"
             value={taskInput}
             onChange={(e) => setTaskInput(e.target.value)}
           />
@@ -78,10 +100,11 @@ function Home() {
             value={dueDate}
             onChange={(e) => setDueDate(e.target.value)}
           />
-          <button onClick={addTask}>Add</button>
+          <button onClick={addOrUpdateTask}>
+            {editTaskId !== null ? "Update" : "Add"}
+          </button>
         </div>
 
-        {/* ✅ Search input below add-task-form */}
         <input
           className="search-bar"
           type="text"
@@ -104,9 +127,14 @@ function Home() {
               <li
                 key={task.id}
                 className={`task ${task.completed ? "completed" : ""}`}
-                onClick={() => toggleTask(task.id)}
               >
-                <div>
+                <input
+                  type="checkbox"
+                  checked={task.completed}
+                  onChange={() => toggleTask(task.id)}
+                  className="task-checkbox"
+                />
+                <div className="task-details">
                   <strong>{task.text}</strong>
                   {task.dueDate && (
                     <div className="due">Due: {task.dueDate}</div>
@@ -115,12 +143,10 @@ function Home() {
                 <span className={`priority ${task.priority}`}>
                   {task.priority}
                 </span>
-                <button onClick={(e) => {
-                  e.stopPropagation();
-                  deleteTask(task.id);
-                }}>
-                  ❌
-                </button>
+                <div className="task-buttons">
+                  <button onClick={() => startEdit(task)}>✏️</button>
+                  <button onClick={() => confirmDelete(task.id)}>❌</button>
+                </div>
               </li>
             ))}
           </ul>

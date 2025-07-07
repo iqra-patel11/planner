@@ -397,6 +397,37 @@ body, .App {
 }
 
 .search-bar:focus {
-  outline: solid;
+  outline: none;
   border-color: #b39ddb;
 }
+
+.task-buttons {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.task-buttons button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: transform 0.2s ease;
+}
+
+.task-buttons button:hover {
+  transform: scale(1.2);
+}
+
+.task-checkbox {
+  margin-right: 12px;
+  transform: scale(1.2);
+  accent-color: #b39ddb;
+}
+
+.task-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
