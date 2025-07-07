@@ -301,3 +301,49 @@ body {
   background-color: #a1f4b5;
   color: #004d1a;
 }
+
+/* --- POLISH: Font & Shadows --- */
+body, .App {
+  font-family: 'Nunito', sans-serif;
+}
+
+.box {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease-in-out;
+}
+
+.task {
+  transition: all 0.2s ease;
+}
+
+.task:hover {
+  transform: scale(1.01);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* --- POLISH: Headings --- */
+.header h2 {
+  position: relative;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.header h2::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 4px;
+  background: #d1c4e9;
+  margin: 8px auto 0;
+  border-radius: 2px;
+}
+
+/* --- POLISH: Empty state --- */
+.empty {
+  color: #999;
+  font-style: italic;
+  margin-top: 20px;
+  font-size: 0.95rem;
+  text-align: center;
+  padding: 10px;
+}
